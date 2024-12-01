@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+
+    - name: Install dependencies
+      working-directory: ./app
+      env:
+        NODE_ENV: test
+      run: npm install 
+
+    - name: Run lint
+      working-directory: ./app
+      run: npm run lint
+
+
+    - name: Run tests
+      working-directory: ./app
+      env:
+        API_TOKEN: token
+        API_SECRET: secret
+      run: npm test
